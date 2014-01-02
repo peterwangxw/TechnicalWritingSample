@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2011 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.android.actionbarcompat"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="3"
+        android:targetSdkVersion="14" />
+
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <supports-screens android:largeScreens="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.example.android.actionbarcompat.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+        android:name="com.example.android.actionbarcompat.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.android.actionbarcompat.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.digby.mm.android.library.services.impl.ProximityAlertService"
+            android:label="@string/app_name" />
+        <service
+            android:name="com.digby.mm.android.library.services.impl.BootCompleteService"
+            android:label="@string/app_name" />
+        <service
+            android:name="com.digby.mm.android.library.services.impl.EventSenderService"
+            android:label="@string/app_name" />
+        <service android:name="com.digby.mm.android.library.services.impl.GCMIntentService" />
+
+        <!-- Required so that the Localpoint SDK can register for GCM push notifications and receive them -->
+        <receiver
+            android:name="com.digby.mm.android.library.receivers.impl.DigbyGCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.example.android.actionbarcompat" /> <!-- Replace this with the package name of your application. -->
+            </intent-filter>
+        </receiver>
+
+        <!-- Required so that the app will set itself up properly when the device is restarted -->
+        <receiver android:name="com.digby.mm.android.library.receivers.BootCompleteReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.example.android.actionbarcompat.LPLocationBroadcastReceiver"
+            android:exported="false" >
+
+            <!-- This is a combination of the package and class name. -->
+            <intent-filter>
+                <action android:name="com.digby.localpoint.LocationEntry" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.LocationExit" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.CheckInSuccess" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.CheckInFailure" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.LocationAdded" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.LocationModified" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.LocationRemoved" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.example.android.actionbarcompat.LPMessageBroadcastReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.digby.localpoint.MessageAdded" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.MessageModified" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.MessageDeleted" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.example.android.actionbarcompat.LPAttributeBroadcastReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.digby.localpoint.AttributesUpdateSuccess" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.digby.localpoint.AttributesUpdateFailure" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Required to properly handle location movements -->
+        <receiver
+            android:name="com.digby.mm.android.library.receivers.ProximityAlertReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.digby.mm.android.library.proximityalert" />
+
+                <data
+                    android:host="com.digby.lmm.sandbox.sheila"
+                    android:scheme="alert" >
+                </data>
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="digby_appId"
+            android:value="90254d9a-ba6c-4566-8626-da9c378e8269" />
+        <!-- Replace with your brand code; received from Digby. -->
+        <meta-data
+            android:name="digby_brandCode"
+            android:value="sheila" />
+        <!-- Replace with an integer. A reasonable starting value is 50000. This is used when downloading geofences from the Localpoint servers. Not all will be returned. Only those within this set radius. -->
+        <meta-data
+            android:name="digby_searchRadius_meters"
+            android:value="50000" />
+        <!-- Replace with "sandbox" during development and "api" for production. -->
+        <meta-data
+            android:name="digby_server"
+            android:value="sandbox" />
+
+        <activity
+            android:name="com.example.android.actionbarcompat.LPLocationActivity"
+            android:label="@string/title_activity_lplocation_main" >
+        </activity>
+        <activity
+            android:name="com.example.android.actionbarcompat.LPMessageActivity"
+            android:label="@string/title_activity_lpmessage" >
+            <intent-filter>
+                <action android:name="com.digby.mm.android.library.Notifications.sheila" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.android.actionbarcompat.AttributesActivity"
+            android:label="@string/title_activity_attributes" >
+        </activity>
+    </application>
+
+</manifest>
