@@ -17,6 +17,7 @@ public class LPAttributeBroadcastReceiver extends LPAbstractAttributeBroadcastRe
     @Override
     public void onUpdateFailure(Map<String, ILPAttributeValue<?>> attrs, ILPError error) {      
         String errmsg = "Error: " + error.getErrorCode() + ". " + error.getErrorMessage();
+        Log.d("LPAttributeBroadcastReceiver", errmsg);
         toastAndLog(errmsg);
     }
 
@@ -31,13 +32,14 @@ public class LPAttributeBroadcastReceiver extends LPAbstractAttributeBroadcastRe
         }
         
         String msg = "Attributes updated successfully: " + attrs2.toString();
+        Log.d("LPAttributeBroadcastReceiver", msg);
         toastAndLog(msg);
     }
     
     private void toastAndLog(String msg) {
         Toast toast = Toast.makeText(getContext(), msg, Toast.LENGTH_LONG);
         toast.show();
-        Log.d("LPMessageBroadcastReceiver", msg);
+        Log.d("LPAttributeBroadcastReceiver", msg);
     }
     
 }
